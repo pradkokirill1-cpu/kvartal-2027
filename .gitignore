@@ -1,0 +1,4 @@
+__pycache__/
+.catalog-cache.json
+.catalog-cache.tmp
+.venv/
