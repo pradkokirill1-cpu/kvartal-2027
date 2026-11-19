@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f3ed">
+  <meta name="description" content="Контакты «Квартала 2027». Партнёрские размещения для застройщиков и агентств недвижимости Минска и Минского района.">
+  <title>Контакты и сотрудничество | Квартал 2027</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap">
+  <link rel="stylesheet" href="./style.css">
+  <style>
+    [aria-current="page"]{color:var(--accent);text-decoration:underline;text-underline-offset:.4em}
+    .contact-head{padding:clamp(30px,6vw,78px) 0 clamp(24px,4vw,48px)}
+    .contact-head h1{font:800 clamp(40px,5.5vw,76px)/1 var(--display);letter-spacing:-.055em;margin:0 0 20px}
+    .contact-head p:last-child{max-width:65ch;color:var(--muted);font-size:clamp(16px,1.5vw,20px);margin:0}
+    .partnership{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:clamp(30px,7vw,112px);border-top:1px solid var(--line);padding:36px 0 55px;align-items:start}
+    .partnership h2{font-size:clamp(24px,3vw,36px)}.formats{margin:24px 0}.formats dt{font-weight:700}.formats dd{margin:4px 0 16px;color:var(--muted)}
+    .call{background:var(--deep);color:var(--page);padding:clamp(22px,3.5vw,48px);border-radius:3px}.call .eyebrow{color:#f0b8c5}
+    .phone{display:inline-block;color:var(--page);font:700 clamp(21px,2.4vw,36px)/1.4 var(--display);white-space:nowrap;text-decoration-thickness:1px;letter-spacing:-.035em}
+    .phone:hover,.phone:focus-visible{color:white}.phone:focus-visible{outline-color:white}.call p:last-child{color:#efdbd7;margin-bottom:0}
+    @media(max-width:700px){.partnership{grid-template-columns:1fr;padding-top:24px;gap:20px}.call{grid-row:1}}
+  </style>
+</head>
+<body>
+  <header class="mast shell">
+    <a class="brand" href="./">КВАРТАЛ<span> / </span>2027</a>
+    <nav aria-label="Навигация"><a href="./#catalog">Каталог</a><a href="./#method">О данных</a><a aria-current="page" href="./contacts.html">Контакты</a></nav>
+  </header>
+  <main class="shell">
+    <div class="contact-head">
+      <p class="eyebrow">О ПРОЕКТЕ И СОТРУДНИЧЕСТВЕ</p>
+      <h1>Контакты</h1>
+      <p>Когда покупатель выбирает между двумя домами, решающей деталью может стать планировка кухни или размер первого взноса. В «Квартале 2027» можно сравнить новостройки Минска и района именно по таким деталям: от срока сдачи до условий покупки.</p>
+    </div>
+    <section class="partnership" aria-labelledby="partner-title">
+      <div>
+        <p class="eyebrow">ЗАСТРОЙЩИКАМ И АГЕНТСТВАМ НЕДВИЖИМОСТИ</p>
+        <h2 id="partner-title">Покажите свой объект там, где выбирают квартиру</h2>
+        <dl class="formats">
+          <dt>Партнёрский блок в каталоге</dt>
+          <dd>Представьте новый корпус, покажите планировку или объясните условия рассрочки. Читатель сможет перейти от сравнения домов прямо к вашему предложению.</dd>
+          <dt>Размещение над результатами поиска</dt>
+          <dd>Обсудим показ вашего объекта первым в отдельном рекламном блоке по подходящему запросу. Например, предложение по трёхкомнатным квартирам увидит тот, кто ищет именно их.</dd>
+        </dl>
+        <p>Платные размещения помечаем как рекламу. Они не меняют цены, сроки сдачи и порядок обычных результатов в справочнике.</p>
+      </div>
+      <aside class="call" aria-label="Телефон для партнёров">
+        <p class="eyebrow">ОБСУДИТЬ РАЗМЕЩЕНИЕ</p>
+        <a class="phone" href="tel:+375293335559">+37529-333-555-9</a>
+        <p>Позвоните и расскажите, какой объект хотите представить. Подберём формат под вашу задачу: от анонса старта продаж до предложения по конкретной квартире.</p>
+      </aside>
+    </section>
+  </main>
+  <footer class="shell footer"><a class="brand" href="./">КВАРТАЛ<span> / </span>2027</a><p>Справочные сведения. Не публичная оферта.</p><a href="./#catalog">В каталог</a></footer>
+</body>
+</html>
