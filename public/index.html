@@ -22,7 +22,7 @@
       <div class="intro">
         <p class="eyebrow">НЕЗАВИСИМЫЙ СПРАВОЧНИК</p>
         <h1 id="title">Новостройки<br>Минска и района</h1>
-        <p class="lede">Строящиеся многоквартирные дома со сдачей до 1 января 2028 года. Сравните сроки, цену метра, планировки и условия покупки.</p>
+        <p class="lede">Строящиеся многоквартирные дома со сдачей до 1 января 2028 года. Проекты без подтверждённой даты собраны отдельно. Сравните сроки, цены и условия покупки.</p>
         <a class="hero-button" href="#catalog">Смотреть дома <span aria-hidden="true">↓</span></a>
       </div>
       <figure class="hero-image"><img src="./architecture.webp" alt="" width="1080" height="608"><figcaption>Архитектурная иллюстрация</figcaption></figure>
@@ -37,7 +37,7 @@
           <button data-zone="" aria-pressed="true">Все</button><button data-zone="city" aria-pressed="false">Минск</button><button data-zone="district" aria-pressed="false">Минский район</button>
         </div>
         <label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="ЖК, дом, адрес" aria-label="Поиск по каталогу"></label>
-        <label class="select"><span>Сдача</span><select id="year" aria-label="Год сдачи"><option value="">Все годы</option><option>2026</option><option>2027</option></select></label>
+        <label class="select"><span>Сдача</span><select id="year" aria-label="Год сдачи"><option value="">Любой срок</option><option>2026</option><option>2027</option><option value="watch">На контроле</option></select></label>
         <label class="select"><span>Комнаты</span><select id="rooms" aria-label="Число комнат"><option value="">Все комнаты</option><option value="1">1 комната</option><option value="2">2 комнаты</option><option value="3">3 комнаты</option><option value="4">4 и больше</option></select></label>
         <label class="select"><span>Сортировка</span><select id="sort" aria-label="Сортировка"><option value="due">По сроку сдачи</option><option value="byn">По цене в BYN</option><option value="usd">По цене в USD</option><option value="eur">По цене в EUR</option></select></label>
       </div>
@@ -51,7 +51,7 @@
     <section id="method" class="method" aria-labelledby="method-title">
       <div><p class="eyebrow">КАК ЧИТАТЬ КАТАЛОГ</p><h2 id="method-title">О данных</h2></div>
       <div>
-        <details><summary>Какие объекты включены?</summary><p>Дома в границах города Минска и Минского района с опубликованным плановым сроком до 01.01.2028. Это выборка открытых источников, не официальный реестр. Готовые дома, корпуса со сроком только «2027–2028» без разбивки и коммерческие помещения не включаются намеренно.</p></details>
+        <details><summary>Какие объекты включены?</summary><p>Основная выборка: дома Минска и Минского района с опубликованным плановым сроком до 01.01.2028. В разделе «На контроле» отмечены проекты без отдельной подтверждённой даты. Готовые дома и коммерческие помещения в основную выборку не входят. Это выборка открытых источников, не официальный реестр.</p></details>
         <details><summary>Что означают цены и планировки?</summary><p>Цена за м² приводится в валюте и с оговорками источника. USD и EUR означают справочный эквивалент; без пересчёта их нельзя напрямую сравнивать с BYN. Проектный ассортимент или опубликованная партия не означают, что все варианты свободны. Для актуальных остатков и чертежей откройте карточку застройщика, для цены договора уточните также отделку, способ оплаты и паркинг.</p></details>
         <details><summary>Что проверяется автоматически?</summary><p>Из витрин трёх проектов берутся сроки и, где опубликованы, цена метра и остатки. В зависимости от площадки проверка запускается раз в сутки по расписанию или при первом посещении после истечения суток. Данные из деклараций, СМИ и условия оплаты проверяются вручную. При сбое остаётся последний сохранённый срез с его датой.</p><ul id="feeds"></ul></details>
         <details><summary>Кто указан в карточке?</summary><p>Заказчик указан там, где его роль подтверждена. Там, где открытый источник называет только застройщика или группу компаний, роль подписана отдельно, а юридическое лицо по договору лучше сверить в актуальной проектной декларации.</p></details>

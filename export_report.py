@@ -30,13 +30,14 @@ def reference(row):
 
 def report(data):
     rows = data["rows"]
-    city = [r for r in rows if r["zone"] == "city"]
-    district = [r for r in rows if r["zone"] == "district"]
+    city = [r for r in rows if r["zone"] == "city" and r.get("due") is not None]
+    district = [r for r in rows if r["zone"] == "district" and r.get("due") is not None]
+    watch = [r for r in rows if r.get("due") is None]
     out = [
         "# Новостройки Минска и Минского района до 2028 года",
         "",
-        f"Срез на 19 ноября 2026 года. Всего в списке: {len(rows)}, в том числе {len(city)} в Минске и {len(district)} в Минском районе. Позиция может включать два дома с общим сроком и условиями.",
-        "Критерий включения: опубликованный плановый ввод до 1 января 2028 года. Это выборка открытых источников, не официальный реестр и не подтверждение наличия квартир.",
+        f"Срез на {data.get('checked', data['snapshot'])[:10]}. С датой до 2028 года: {len(city)} в Минске и {len(district)} в Минском районе. На контроле: {len(watch)} позиций без подтверждённого срока.",
+        "Критерий основной выборки: опубликованный плановый ввод до 1 января 2028 года. Это выборка открытых источников, не официальный реестр и не подтверждение наличия квартир.",
         "",
         "## Как пользоваться списком",
         "",
@@ -45,10 +46,10 @@ def report(data):
         "- **Заказчик**: когда источник называет только застройщика, строительную организацию или группу, это отмечено явно. Размер взноса и график лучше сверять с действующей декларацией.",
         "",
     ]
-    for heading, items in (("Минск", city), ("Минский район", district)):
+    for heading, items in (("Минск", city), ("Минский район", district), ("На контроле", watch)):
         out += [f"## {heading}", "", "| Дом и адрес | Плановая сдача | Цена за м² | Заказчик / застройщик | Планировки и площади | Условия оплаты и оговорки | Источники |",
                 "|---|---|---|---|---|---|---|"]
-        for row in sorted(items, key=lambda r: (r["due"] + (5 if r["due"] % 10 == 0 else 0), r.get("project", ""), r["name"])):
+        for row in sorted(items, key=lambda r: (r["due"] + (5 if r["due"] % 10 == 0 else 0) if r.get("due") is not None else 99999, r.get("project", ""), r["name"])):
             title = (row.get("project", "") + " · " if row.get("project") else "") + row["name"]
             summary = [row.get("area"), ", ".join(str(x) for x in row.get("rooms", [])) + " комн." if row.get("rooms") else None, row.get("layout")]
             if isinstance(row.get("stock"), int):
@@ -59,10 +60,10 @@ def report(data):
             out.append("| " + " | ".join(map(fmt,cells)) + " |")
         out.append("")
     out += ["## Что не включено", "",
-            "- **Лошица-10**: разбивка по конкретным корпусам со сдачей в 2027 году не подтверждена; опубликован диапазон 2027–2028 ([Мингорисполком в сообщении БЕЛТА](https://belta.by/amp/regions/view/uks-mingorispolkoma-ozvuchil-plany-zastrojki-stolitsy-i-smolevichej-811117-2026/)).",
+            "- **«Гулливер», дом №1**: дом уже введён, заказчик [выдаёт ключи](https://t.me/s/uksmgi/1816).",
             "- **Левада**: дом 12.2 уже введён, а для дома 12.1 застройщик указывает январь 2028 года ([дом 12.2](https://www.airon.by/dom/223), [дом 12.1](https://www.airon.by/dom/226)).",
             "- **STONE**: объект находится в Смолевичском, а не в Минском районе ([адрес в карточке квартиры](https://realt.by/sale-flats/object/4271260/)).",
-            "- **Минск-Мир**: общий срок комплекса не является датой ввода квартиры; многофункциональные помещения в список не включены. Сверяйте тип «Квартира», стадию «Строится» и год в [официальной витрине](https://minskworld.by/search-by-parameters/).",
+            "- **Минск-Мир**: сами многофункциональные помещения не включены. Жилой проект отражён в разделе «На контроле».",
             ""]
     return "\n".join(out)
 

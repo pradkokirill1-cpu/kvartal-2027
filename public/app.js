@@ -14,6 +14,7 @@ const amount = r => r.price == null ? (r.priceText || "Не опубликова
 const rooms = r => (r.rooms || []).join(", ");
 const compact = r => r.rooms?.length ? `${rooms(r)} комн.` : "";
 const normalize = s => s.toLowerCase().replaceAll("ё","е").replace(/[«»№.,–-]/g, " ").replace(/\s+/g," ").trim();
+const confirmed = r => Number.isInteger(r.due);
 let data = window.KVARTAL_SNAPSHOT, zone = "", selection = [], expanded = new Set();
 
 function link(label, url) {
@@ -70,18 +71,18 @@ function entry(r) {
 
 function render() {
   if (!data?.rows) return;
-  const search = normalize($("search").value);
+  const search = normalize($("search").value).split(" ").filter(Boolean);
   const year = $("year").value;
   const room = +$("rooms").value;
   const order = $("sort").value;
   selection = data.rows.filter(r =>
     (!zone || r.zone === zone) &&
-    (!year || Math.floor(r.due / 10) === +year) &&
+    (!year || (year === "watch" ? !confirmed(r) : confirmed(r) && Math.floor(r.due / 10) === +year)) &&
     (!room || (r.rooms || []).some(n => room === 4 ? n >= room : n === room)) &&
-    (!search || normalize([title(r),r.address,r.builder].filter(Boolean).join(" ")).includes(search))
+    search.every(term => normalize([title(r),r.address,r.builder,r.role].filter(Boolean).join(" ")).split(" ").some(word => word.startsWith(term)))
   ).sort((a,b) => {
     const val = r => r.currency?.toLowerCase() === order ? r.price ?? Infinity : Infinity;
-    const byDue = r => r.due % 10 ? r.due : r.due + 5;
+    const byDue = r => !confirmed(r) ? 99999 : r.due % 10 ? r.due : r.due + 5;
     return (order !== "due" ? (val(a) - val(b)) || 0 : 0) || byDue(a)-byDue(b) || title(a).localeCompare(title(b),"ru",{numeric:true});
   });
   $("result").textContent = `Показано ${selection.length} из ${data.rows.length} позиций`;
@@ -101,7 +102,12 @@ function render() {
   }
   const head = node("div","column-head row-grid");
   for (const text of ["Жилой комплекс / дом","Плановая сдача","Цена за метр","Квартиры",""]) head.append(node("span","",text));
-  $("list").replaceChildren(head,...selection.map(entry));
+  const dated = selection.filter(confirmed), watch = selection.filter(r => !confirmed(r));
+  const watchHeading = node("div","watch-heading");
+  watchHeading.id = "watchlist";
+  watchHeading.append(node("h3","","На контроле"), node("p","","Нет подтверждённой даты ввода до 1 января 2028 года. Эти объекты не входят в выборку по году сдачи."));
+  $("list").replaceChildren(...(dated.length ? [head,...dated.map(entry)] : []),
+    ...(watch.length ? [watchHeading,...watch.map(entry)] : []));
 }
 
 function status(mode) {
@@ -135,8 +141,8 @@ $("export").onclick = () => {
     if (/^[=+@\-\t\r]/.test(val)) val = "'" + val;
     return `"${val.replaceAll('"','""')}"`;
   };
-  const rows = [["Объект","Территория","Адрес","Плановая сдача","Цена за м²","Заказчик или застройщик","Роль","Комнаты","Площадь","Планировки","Квартир в витрине","Оплата","Оговорки","Дата проверки","Источник","Доп. источники"],
-    ...selection.map(r => [title(r), r.zone === "city" ? "Минск" : "Минский район",r.address,r.when,amount(r),r.builder,r.role,rooms(r),r.area,r.layout,r.stock,r.payment,r.note,r.observed || data.snapshot,r.url,(r.sources || []).map(s=>s[1]).join(" | ")])];
+  const rows = [["Объект","Территория","Адрес","Плановая сдача","Цена за м²","Заказчик или застройщик","Роль","Комнаты","Площадь","Планировки","Квартир в витрине","Оплата","Оговорки","Дата проверки","Источник","Доп. источники","Статус срока"],
+    ...selection.map(r => [title(r), r.zone === "city" ? "Минск" : "Минский район",r.address,r.when,amount(r),r.builder,r.role,rooms(r),r.area,r.layout,r.stock,r.payment,r.note,r.observed || data.snapshot,r.url,(r.sources || []).map(s=>s[1]).join(" | "),confirmed(r) ? "Плановый срок опубликован" : "На контроле"])];
   const file = new Blob(["\ufeff", rows.map(r => r.map(clean).join(";")).join("\r\n")],{type:"text/csv;charset=utf-8"});
   const a = node("a");
   const url = URL.createObjectURL(file);
