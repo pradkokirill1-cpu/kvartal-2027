@@ -138,7 +138,7 @@ for (const id of ["year","rooms","sort"]) $(id).addEventListener("change", rende
 $("export").onclick = () => {
   const clean = value => {
     let val = String(value ?? "");
-    if (/^[=+@\-\t\r]/.test(val)) val = "'" + val;
+    if (/^[\t\r\n]|^[\s\u0000-\u001f\u007f]*[=+@-]/u.test(val)) val = "'" + val;
     return `"${val.replaceAll('"','""')}"`;
   };
   const rows = [["Объект","Территория","Адрес","Плановая сдача","Цена за м²","Заказчик или застройщик","Роль","Комнаты","Площадь","Планировки","Квартир в витрине","Оплата","Оговорки","Дата проверки","Источник","Доп. источники","Статус срока"],
@@ -155,8 +155,31 @@ $("export").onclick = () => {
 };
 
 const local = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+const mirror = location.hostname.endsWith(".pplx.app");
+const scheduledFeed = "https://pradkokirill1-cpu.github.io/kvartal-2027/snapshot.js";
 const rawApi = window.KVARTAL_API;
 const runtime = local ? "/api/catalog" : rawApi && !rawApi.startsWith("__PORT_") ? `${rawApi.replace(/\/$/,"")}/api/catalog` : null;
+async function syncMirror() {
+  try {
+    const response = await fetch(scheduledFeed, {cache:"no-cache",credentials:"omit",redirect:"error",signal:AbortSignal.timeout(5500)});
+    if (!response.ok) throw Error("Unavailable");
+    const prefix = "window.KVARTAL_SNAPSHOT=";
+    const text = (await response.text()).trim();
+    if (!text.startsWith(prefix) || !text.endsWith(";")) throw Error("Invalid feed format");
+    // Parse the existing static feed as JSON, never as executable JavaScript.
+    const result = JSON.parse(text.slice(prefix.length,-1));
+    if (result.scheduled !== true || !Array.isArray(result.rows) || !result.rows.length ||
+        !Array.isArray(result.feeds) || typeof result.checked !== "string" ||
+        !Number.isFinite(Date.parse(result.checked)) || Date.parse(result.checked) < Date.parse(data?.checked)) {
+      throw Error("Invalid or older catalog");
+    }
+    data = result;
+    render();
+    status("scheduled");
+  } catch {
+    if (data) status("offline");
+  }
+}
 async function sync(attempt = 0) {
   try {
     if (data?.scheduled && !runtime) {
@@ -183,4 +206,5 @@ if (data) {
   render();
   status("loading");
 }
-sync();
+if (mirror) syncMirror();
+else sync();
